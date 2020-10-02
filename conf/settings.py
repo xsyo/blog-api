@@ -139,3 +139,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
 }
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'blog.user_serializers.UserSerializer',
+        'user_create': 'blog.user_serializers.UserCreateSerializer',
+    }
+}

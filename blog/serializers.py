@@ -13,11 +13,7 @@ class HeadingSerializer(serializers.ModelSerializer):
 class PostListSerializer(serializers.HyperlinkedModelSerializer):
     '''Сериализатор для списков поста'''
 
-    heading = serializers.StringRelatedField()
-    author = serializers.StringRelatedField()
-
     class Meta:
         model = Post
         fields = ('url', 'title', 'author', 'img', 'heading', 'published', 'likes_count', 'comments_count')
-        read_only_fields = ('author', 'heading')
         
