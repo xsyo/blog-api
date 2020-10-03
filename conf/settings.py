@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'imagekit',
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -141,11 +144,17 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
+    'DEFAULT_SCHEMA_CLASS' : 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 DJOSER = {
     'SERIALIZERS': {
-        'user': 'blog.user_serializers.UserSerializer',
-        'user_create': 'blog.user_serializers.UserCreateSerializer',
+        'user': 'blog.user_serializers.MyUserSerializer',
+        'user_create': 'blog.user_serializers.MyUserCreateSerializer',
     }
+}
+
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
 }

@@ -1,7 +1,8 @@
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from .models import Post
-from .serializers import PostCreateSerializer, PostListSerialiver
+from .serializers import PostCreateSerializer, PostListSerializer, PostSerializer
+from .permissions import IsAuthorOrReadOnly
 
 
 class PostListCreateAPIView(ListCreateAPIView):
@@ -14,7 +15,14 @@ class PostListCreateAPIView(ListCreateAPIView):
         if self.request.method == 'POST':
             return PostCreateSerializer
         else:
-            return PostListSerialiver
+            return PostListSerializer
+
+class PostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthorOrReadOnly,)
+
+
 
 
     

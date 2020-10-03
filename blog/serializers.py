@@ -11,6 +11,7 @@ class HeadingSerializer(serializers.ModelSerializer):
         model = Heading
         fields = ('id', 'name')
 
+
 class PostCreateSerializer(serializers.ModelSerializer):
     '''Сериализатор для создания поста'''
     
@@ -18,7 +19,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('title', 'author', 'img', 'heading')
+        fields = ('title', 'content', 'author', 'img', 'heading')
 
     def create(self, validated_data):
         '''Задает автора поста авторизованным пользователем'''
@@ -28,14 +29,35 @@ class PostCreateSerializer(serializers.ModelSerializer):
         return new_post
 
 
-class PostListSerialiver(serializers.ModelSerializer):
+class PostListSerializer(serializers.HyperlinkedModelSerializer):
+    '''Сериализатор для списка постов'''
 
     author = serializers.StringRelatedField()
     heading = serializers.StringRelatedField()
+    img_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
         model = Post
-        fields = ( 'id', 'title', 'author', 'heading', 'img', 'published', 'likes_count', 'comments_count')
+        fields = ( 'url', 'title', 'author', 'heading', 'img_thumbnail', 'published', 'likes_count', 'comments_count')
+        extra_kwargs = {
+            'url': {
+                'view_name': 'blog:post-detail',
+                'lookup_field': 'pk'
+            }
+        }
 
 
-    
+class PostSerializer(serializers.ModelSerializer):
+    '''Сериализатор постов'''
+
+    author = serializers.StringRelatedField()
+
+    class Meta:
+        model = Post
+        fields = ('id', 'title', 'author', 'heading', 'content', 'img',  'published', 'likes_count', 'comments_count')
+
+
+class СommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        pass
