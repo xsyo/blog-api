@@ -23,7 +23,7 @@ class Post(models.Model):
     '''Модель поста блога'''
 
     title = models.CharField(max_length=250, verbose_name='Название поста')
-    img = models.ImageField(upload_to=img_upload_function, verbose_name='Изобродение поста')
+    img = models.ImageField(upload_to=img_upload_function, blank=True, null=True, verbose_name='Изобродение поста')
     author = models.ForeignKey(UserModel, related_name='my_posts', verbose_name='Автор поста', on_delete=models.CASCADE)
     content = models.TextField(verbose_name='Контент поста')
     published = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время публикации')
