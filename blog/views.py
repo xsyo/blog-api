@@ -1,7 +1,9 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django.shortcuts import get_object_or_404
 
-from .models import Post
-from .serializers import PostCreateSerializer, PostListSerializer, PostSerializer
+from .models import Post, Сomment
+from .serializers import (PostCreateSerializer, PostListSerializer, 
+                            PostSerializer, СommentSerializer)
 from .permissions import IsAuthorOrReadOnly
 
 
@@ -23,6 +25,15 @@ class PostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthorOrReadOnly,)
 
 
+class СommentListCreateAPI(ListCreateAPIView):
+    
+    serializer_class = СommentSerializer
 
+    def get_queryset(self):
+        post = get_object_or_404(Post, id=self.kwargs['post_id'])
+        return Сomment.objects.filter(post=post)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user, post__id=self.kwargs['post_id'])
 
     

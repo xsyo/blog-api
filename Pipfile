@@ -11,10 +11,12 @@ djangorestframework = "==3.11"
 djoser = "*"
 pillow = "*"
 django-imagekit = "*"
-django-rest-swagger = "==2.3.0"
+django-rest-swagger = "*"
 coreapi = "*"
 pyyaml = "*"
 drf-yasg = "*"
+gunicorn = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"

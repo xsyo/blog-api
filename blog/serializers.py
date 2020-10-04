@@ -59,5 +59,8 @@ class PostSerializer(serializers.ModelSerializer):
 
 class СommentSerializer(serializers.ModelSerializer):
 
+    author = serializers.StringRelatedField()
+
     class Meta:
-        pass
+        model = Сomment
+        fields = ('id', 'author', 'text', 'created_at')
