@@ -29,7 +29,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
         return new_post
 
 
-class PostListSerializer(serializers.HyperlinkedModelSerializer):
+class PostListSerializer(serializers.ModelSerializer):
     '''Сериализатор для списка постов'''
 
     author = serializers.StringRelatedField()
@@ -38,19 +38,14 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ( 'url', 'title', 'author', 'heading', 'img_thumbnail', 'published', 'likes_count', 'comments_count')
-        extra_kwargs = {
-            'url': {
-                'view_name': 'blog:post-detail',
-                'lookup_field': 'pk'
-            }
-        }
+        fields = ( 'id', 'title', 'author', 'heading', 'img_thumbnail', 'published', 'likes_count', 'comments_count')
 
 
 class PostSerializer(serializers.ModelSerializer):
     '''Сериализатор постов'''
 
     author = serializers.StringRelatedField()
+    heading = HeadingSerializer()
 
     class Meta:
         model = Post
