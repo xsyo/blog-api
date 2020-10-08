@@ -35,10 +35,14 @@ class PostListSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
     heading = serializers.StringRelatedField()
     img_thumbnail = serializers.ImageField(read_only=True)
+    likes_count = serializers.IntegerField()
+    comments_count = serializers.IntegerField()
+    
+  
 
     class Meta:
         model = Post
-        fields = ( 'id', 'title', 'author', 'heading', 'img_thumbnail', 'published', 'likes_count', 'comments_count')
+        fields = ( 'id', 'title', 'author', 'heading', 'img_thumbnail', 'published', 'likes_count', 'comments_count', 'small_content')
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -46,10 +50,22 @@ class PostSerializer(serializers.ModelSerializer):
 
     author = serializers.StringRelatedField()
     heading = HeadingSerializer()
+    likes_count = serializers.IntegerField()
+    comments_count = serializers.IntegerField()
+    is_liked = serializers.SerializerMethodField()
+
+    def get_is_liked(self, obj):
+        '''Узнает лайкул ли поьзователь данный пост'''
+
+        if self.context['request'].user.is_authenticated:
+            return self.context['request'].user in obj.likes.all()
+        else:
+            return False
+
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'author', 'heading', 'content', 'img',  'published', 'likes_count', 'comments_count')
+        fields = ('id', 'title', 'author', 'heading', 'content', 'img',  'published', 'likes_count', 'comments_count', 'is_liked')
 
 
 class СommentSerializer(serializers.ModelSerializer):

@@ -1,7 +1,10 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+
 
 from .models import Post, Сomment, Heading
 from .serializers import (PostCreateSerializer, PostListSerializer, 
@@ -71,3 +74,17 @@ class HeadingListAPIView(ListAPIView):
 
     queryset = Heading.objects.all()
     serializer_class = HeadingSerializer
+
+
+@api_view(['GET'])
+def username_check(request):
+    username_being_checked = request.query_params['username']
+    result = get_user_model().objects.filter(username=username_being_checked).exists()
+    return Response({'result': result})
+
+
+@api_view(['GET'])
+def email_check(request):
+    email_being_checked = request.query_params['email']
+    result = get_user_model().objects.filter(email=email_being_checked).exists()
+    return Response({'result': result})

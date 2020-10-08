@@ -21,12 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u_35m%!j^f%%ql9$yfb6+xr95c6&k000&&rpw6b(41-_z66#e5'
-
+SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '212.109.198.121', '0.0.0.0']
 
 
 # Application definition
@@ -55,6 +54,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'blog.middleware.CORSMiddleware', # CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -86,10 +86,21 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -131,14 +142,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -147,19 +159,31 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_SCHEMA_CLASS' : 'rest_framework.schemas.coreapi.AutoSchema',
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
+FRONTEND_URL = 'http://localhost:4200'
+
 DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': FRONTEND_URL + '/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': FRONTEND_URL + '/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': FRONTEND_URL + '/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user': 'blog.user_serializers.MyUserSerializer',
         'user_create': 'blog.user_serializers.MyUserCreateSerializer',
     }
 }
 
-SWAGGER_SETTINGS = {
-    'LOGIN_URL': 'rest_framework:login',
-    'LOGOUT_URL': 'rest_framework:logout',
-}
+# SWAGGER_SETTINGS = {
+#     'LOGIN_URL': 'rest_framework:login',
+#     'LOGOUT_URL': 'rest_framework:logout',
+# }
+
+#Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

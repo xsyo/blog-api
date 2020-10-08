@@ -18,6 +18,7 @@ drf-yasg = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 django-filter = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
-from .utils import img_upload_function
+from .utils import img_upload_function, heading_img_upload
 
 UserModel = get_user_model()
 
@@ -13,6 +13,7 @@ class Heading(models.Model):
     '''Модель рубрики'''
 
     name = models.CharField(max_length=100, verbose_name='Название рубрики')
+    img = models.ImageField(upload_to=heading_img_upload, verbose_name='Изображение рубрики')
 
     def __str__(self):
         return self.name
@@ -45,6 +46,10 @@ class Post(models.Model):
         '''Количество комментариев у поста'''
 
         return self.comments.count()
+
+    @property
+    def small_content(self):
+        return self.content[:30]
 
     def __str__(self):
         return self.title
